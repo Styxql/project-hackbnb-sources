@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_cors import CORS
 from database.init import db
@@ -40,7 +41,9 @@ def welcome():
 
 if __name__ == '__main__':
    app.run(
-      debug=True,
-      host="0.0.0.0",
+      # Fix : debug=True exposait les stacktraces et la console Werkzeug (RCE possible).
+      # Debug seulement si FLASK_DEBUG=1 (dev), et écoute en local par défaut car Apache fait proxy
+      debug=os.getenv("FLASK_DEBUG") == "1",
+      host=os.getenv("APP_HOST", "127.0.0.1"),
       port=9001,
    )
