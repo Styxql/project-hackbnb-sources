@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react"
 import { apiRoomDetails } from "../../api/rooms.api"
 import type { Room } from "../../types/room"
 import { useParams } from "react-router-dom"
+import DOMPurify from "dompurify"
 import { apiBookingNew } from "../../api/bookings.api"
 
 /**
@@ -49,7 +50,8 @@ export const RoomPage = () => {
 
                     <h2 className="mt-4 text-md text-gray-300">Hôte : {room.host?.name}</h2>
 
-                    <div className="mt-8" dangerouslySetInnerHTML={{__html: room.description}}></div>
+                    {/* Fix XSS stockée : on nettoie le HTML de la description avant de l'afficher */}
+                    <div className="mt-8" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(room.description)}}></div>
 
                     <div className="m-auto mt-10 rounded-3xl p-8 border-1 border-gray-300">
                         <h2 className="text-xl">

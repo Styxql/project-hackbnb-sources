@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams, useSearchParams } from "react-router-dom"
+import DOMPurify from "dompurify"
 import { apiBookingCheckoutLines, apiBookingConfirm, apiBookingDetails } from "../../api/bookings.api"
 import type { Booking } from "../../types/booking"
 
@@ -46,7 +47,8 @@ export const BookingPage = () => {
 
                     <h2 className="mt-4 text-md text-gray-300">Hôte : {booking.room.host?.name}</h2>
 
-                    <div className="mt-8" dangerouslySetInnerHTML={{__html: booking.room.description}}></div>
+                    {/* Fix XSS stockée : on nettoie le HTML de la description avant de l'afficher */}
+                    <div className="mt-8" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(booking.room.description)}}></div>
 
                     <div className="m-auto mt-10 rounded-3xl p-8 border-1 border-gray-300">
                         <h2 className="text-xl">
